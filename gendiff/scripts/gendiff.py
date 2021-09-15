@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """This is start gendiff."""
 import argparse
 
