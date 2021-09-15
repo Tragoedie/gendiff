@@ -1,0 +1,15 @@
+name: linter_check
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run linter and pytest
+        run: |
+          pip install poetry
+          make install
+          make lint
+          make test
