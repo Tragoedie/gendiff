@@ -55,7 +55,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 name = "coverage"
 version = "5.5"
 description = "Code coverage measurement for Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
 
@@ -562,7 +562,7 @@ typing_extensions = ">=3.6,<4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "b16f745ab157c2853540c7caa65d86973565b65fe9717dd694151ebe00af656f"
+content-hash = "dd647c8c48e7d97e3a1491a92b5f1b5e0f697087b8fed602fb70cf6f6b9aba4a"
 
 [metadata.files]
 astor = [
