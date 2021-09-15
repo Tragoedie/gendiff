@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "hexlet-code"
 version = "0.1.0"
-description = ""
+description = "Show diff between two files"
 authors = ["Tragoedia <tragoedia@mail.ru>"]
 packages = [
   { include = "gendiff" },
@@ -9,10 +9,12 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pytest = "^6.2.5"
+PyYAML = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
 wemake-python-styleguide = "^0.15.3"
+pytest = "^6.2.5"
+pytest-cov = "^2.12.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
