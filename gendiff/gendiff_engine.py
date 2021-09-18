@@ -1,5 +1,5 @@
 """This is the difference logic."""
-import json
+from gendiff.parser_file import parser_file
 
 
 def generate_diff(file_path1, file_path2):
@@ -12,10 +12,8 @@ def generate_diff(file_path1, file_path2):
     Returns:
          basestring: difference.
     """
-    with open(file_path1) as first_json_file:
-        first_file = json.load(first_json_file)
-    with open(file_path2) as second_json_file:
-        second_file = json.load(second_json_file)
+    first_file = parser_file(file_path1, file_path1[file_path1.rfind('.'):])
+    second_file = parser_file(file_path2, file_path2[file_path2.rfind('.'):])
     diff_result = ['{\n']
     for key_file1, value_file1 in first_file.items():
         if second_file.get(key_file1) is None:
