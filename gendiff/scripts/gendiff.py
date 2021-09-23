@@ -13,9 +13,13 @@ def main():
         '-f',
         '--format',
         help='set format of output',
+        dest='format',
+        action='store',
     )
     args = parser.parse_args()
-    print(generate_diff(args.first_file, args.second_file))
+    if not args.format:
+        args.format = 'stylish'
+    print(generate_diff(args.first_file, args.second_file, args.format))
 
 
 if __name__ == '__main__':
