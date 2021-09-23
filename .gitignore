@@ -3,3 +3,4 @@ dist/
 .venv/
 coverage.xml
 .coverage
+setup.cfg
