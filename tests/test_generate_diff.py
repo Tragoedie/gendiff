@@ -1,5 +1,5 @@
 from gendiff.gendiff_engine import generate_diff
-from tests.fixtures.result_for_testing import SIMPLE_STRING, NESTED_STRUCTURE
+from tests.fixtures.result_for_testing import SIMPLE_STRING, NESTED_STRUCTURE, PLAIN_STRUCTURE
 
 
 def test_generate_diff_json():
@@ -14,13 +14,19 @@ def test_generate_diff_yaml():
            == SIMPLE_STRING
 
 
-def test_formatter_json():
+def test_generate_stylish_json():
     assert generate_diff('./tests/fixtures/nested_structure_before.json',
                          './tests/fixtures/nested_structure_after.json') \
            == NESTED_STRUCTURE
 
 
-def test_formatter_yaml():
+def test_generate_stylish_yaml():
     assert generate_diff('./tests/fixtures/nested_structure_before.yaml',
                          './tests/fixtures/nested_structure_after.yaml') \
            == NESTED_STRUCTURE
+
+
+def test_generate_plain_json():
+    assert generate_diff('./tests/fixtures/nested_structure_before.json',
+                         './tests/fixtures/nested_structure_after.json', 'plain') \
+           == PLAIN_STRUCTURE

@@ -1,9 +1,17 @@
 """This is string formatter."""
-from gendiff.constants import ADDED, CONDITION, DELETED, UNCHANGED, VALUE
+from gendiff.constants import (
+    ADDED,
+    CONDITION,
+    DELETED,
+    NEW_VALUE,
+    OLD_VALUE,
+    UNCHANGED,
+    VALUE,
+)
 
 
 def formatter_stylish(format_dict):
-    """Convert format_dict to string.
+    """Convert format_dict to string format.
 
     Parameters:
         format_dict(dict): dict of difference.
@@ -24,13 +32,13 @@ def formatter_stylish(format_dict):
                 )
             elif check(simple_dict[key]) and check(simple_dict[key][VALUE]):
                 if 'old_value' in simple_dict[key][VALUE]:
-                    if isinstance(simple_dict[key][VALUE]['old_value'], dict):
+                    if isinstance(simple_dict[key][VALUE][OLD_VALUE], dict):
                         string += '{0}{1}{2}: {{\n{3}{0}    }}\n'.format(
                             tab,
                             get_status(DELETED),
                             key,
                             form(
-                                simple_dict[key][VALUE]['old_value'],
+                                simple_dict[key][VALUE][OLD_VALUE],
                                 tab + '    ',
                                 '',
                             ),
@@ -40,15 +48,15 @@ def formatter_stylish(format_dict):
                             tab,
                             get_status(DELETED),
                             key,
-                            converted(simple_dict[key][VALUE]['old_value']),
+                            converted(simple_dict[key][VALUE][OLD_VALUE]),
                         )
-                    if isinstance(simple_dict[key][VALUE]['new_value'], dict):
+                    if isinstance(simple_dict[key][VALUE][NEW_VALUE], dict):
                         string += '{0}{1}{2}: {{\n{3}{0}    }}\n'.format(
                             tab,
                             get_status(ADDED),
                             key,
                             form(
-                                simple_dict[key][VALUE]['new_value'],
+                                simple_dict[key][VALUE][NEW_VALUE],
                                 tab + '    ',
                                 '',
                             ),
@@ -58,7 +66,7 @@ def formatter_stylish(format_dict):
                             tab,
                             get_status(ADDED),
                             key,
-                            converted(simple_dict[key][VALUE]['new_value']),
+                            converted(simple_dict[key][VALUE][NEW_VALUE]),
                         )
                 else:
                     string += '{0}{1}{2}: {{\n{3}{0}    }}\n'.format(
@@ -108,12 +116,10 @@ def converted(value):
         value: name of values.
 
     Returns:
-        new values
+        new values.
     """
-    if value is False:
-        return 'false'
-    elif value is True:
-        return 'true'
+    if isinstance(value, bool):
+        return (str(value)).lower()
     elif value is None:
         return 'null'
     return value

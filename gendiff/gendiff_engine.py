@@ -5,9 +5,12 @@ from gendiff.constants import (
     CONDITION,
     DELETED,
     NESTED,
+    NEW_VALUE,
+    OLD_VALUE,
     UNCHANGED,
     VALUE,
 )
+from gendiff.formatters.formatter_plain import formatter_plain
 from gendiff.formatters.formatter_stylish import formatter_stylish
 from gendiff.parser_file import parser_file
 
@@ -47,8 +50,8 @@ def generate_diff(file_path1, file_path2, formatter_name='stylish'):
                     diff_diff[key] = {
                         CONDITION: CHANGED,
                         VALUE: {
-                            'old_value': first_dict[key],
-                            'new_value': second_dict[key],
+                            OLD_VALUE: first_dict[key],
+                            NEW_VALUE: second_dict[key],
                         },
                     }
         for key_s in second_dict:
@@ -72,5 +75,6 @@ def _select_formatter(formatter_name):
     """
     formatters = {
         'stylish': formatter_stylish,
+        'plain': formatter_plain,
     }
     return formatters[formatter_name]
