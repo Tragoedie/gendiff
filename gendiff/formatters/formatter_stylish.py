@@ -89,8 +89,8 @@ def formatter_stylish(format_dict):
                     converted(value),
                 )
         return string
-
-    return '{{\n{0}}}'.format(form(format_dict, tabs, ''))
+    result_string = '{{\n{0}}}'.format(form(format_dict, tabs, ''))
+    return result_string.strip()
 
 
 def get_status(value):

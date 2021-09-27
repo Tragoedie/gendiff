@@ -8,8 +8,6 @@ common:
   setting6:
     key: value
     ops: vops
-    doge:
-      wow: so much
 group1:
   foo: bar
   baz: bars

@@ -19,10 +19,6 @@ NESTED_STRUCTURE = '''{
             key5: value5
         }
         setting6: {
-            doge: {
-              - wow: 
-              + wow: so much
-            }
             key: value
           + ops: vops
         }
@@ -52,12 +48,12 @@ NESTED_STRUCTURE = '''{
     }
 }'''
 
+
 PLAIN_STRUCTURE = '''Property 'common.follow' was added with value: false
 Property 'common.setting2' was removed
 Property 'common.setting3' was updated. From true to null
 Property 'common.setting4' was added with value: 'blah blah'
 Property 'common.setting5' was added with value: [complex value]
-Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
 Property 'common.setting6.ops' was added with value: 'vops'
 Property 'group1.baz' was updated. From 'bas' to 'bars'
 Property 'group1.nest' was updated. From [complex value] to 'str'
@@ -101,18 +97,6 @@ JSON_STRUCTURE = '''{
       "setting6": {
         "condition": "nested",
         "value": {
-          "doge": {
-            "condition": "nested",
-            "value": {
-              "wow": {
-                "condition": "changed",
-                "value": {
-                  "new_value": "so much",
-                  "old_value": ""
-                }
-              }
-            }
-          },
           "key": {
             "condition": "unchanged",
             "value": "value"
