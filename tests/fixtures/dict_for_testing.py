@@ -20,4 +20,3 @@ DICTIONARY_FOR_TEST = {'common': {
     'group2': {'condition': 'deleted', 'value': {'abc': 12345, 'deep': {'id': 45}}},
     'group3': {'condition': 'added', 'value': {'deep': {'id': {'number': 45}}, 'fee': 100500}}
 }
-
