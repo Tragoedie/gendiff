@@ -10,6 +10,7 @@ from gendiff.constants import (
     UNCHANGED,
     VALUE,
 )
+from gendiff.formatters.formatter_json import formatter_json
 from gendiff.formatters.formatter_plain import formatter_plain
 from gendiff.formatters.formatter_stylish import formatter_stylish
 from gendiff.parser_file import parser_file
@@ -76,5 +77,6 @@ def _select_formatter(formatter_name):
     formatters = {
         'stylish': formatter_stylish,
         'plain': formatter_plain,
+        'json': formatter_json,
     }
     return formatters[formatter_name]

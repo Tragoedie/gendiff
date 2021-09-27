@@ -29,15 +29,15 @@ def formatter_plain(format_dict):
             if simple_dict[key].get(CONDITION) == ADDED:
                 string += "Property '{0}' was added with value: {1}\n".format(
                     path,
-                    converted(simple_dict[key][VALUE]),
+                    converted_plain(simple_dict[key][VALUE]),
                 )
             elif simple_dict[key].get(CONDITION) == DELETED:
                 string += "Property '{0}' was removed\n".format(path)
             elif simple_dict[key].get(CONDITION) == CHANGED:
                 string += "Property '{0}' was updated. From {1} to {2}\n".format(
                     path,
-                    converted(simple_dict[key][VALUE][OLD_VALUE]),
-                    converted(simple_dict[key][VALUE][NEW_VALUE]),
+                    converted_plain(simple_dict[key][VALUE][OLD_VALUE]),
+                    converted_plain(simple_dict[key][VALUE][NEW_VALUE]),
                 )
             elif simple_dict[key].get(CONDITION) == UNCHANGED:
                 continue
@@ -60,10 +60,10 @@ def formatter_plain(format_dict):
                 '',
             )
 
-    return result_string
+    return result_string[:len(result_string) - 1]
 
 
-def converted(value):
+def converted_plain(value):
     """Editing values.
 
     Parameters:

@@ -62,5 +62,112 @@ Property 'common.setting6.ops' was added with value: 'vops'
 Property 'group1.baz' was updated. From 'bas' to 'bars'
 Property 'group1.nest' was updated. From [complex value] to 'str'
 Property 'group2' was removed
-Property 'group3' was added with value: [complex value]
-'''
+Property 'group3' was added with value: [complex value]'''
+
+
+JSON_STRUCTURE = '''{
+  "common": {
+    "condition": "nested",
+    "value": {
+      "follow": {
+        "condition": "added",
+        "value": false
+      },
+      "setting1": {
+        "condition": "unchanged",
+        "value": "Value 1"
+      },
+      "setting2": {
+        "condition": "deleted",
+        "value": 200
+      },
+      "setting3": {
+        "condition": "changed",
+        "value": {
+          "new_value": null,
+          "old_value": true
+        }
+      },
+      "setting4": {
+        "condition": "added",
+        "value": "blah blah"
+      },
+      "setting5": {
+        "condition": "added",
+        "value": {
+          "key5": "value5"
+        }
+      },
+      "setting6": {
+        "condition": "nested",
+        "value": {
+          "doge": {
+            "condition": "nested",
+            "value": {
+              "wow": {
+                "condition": "changed",
+                "value": {
+                  "new_value": "so much",
+                  "old_value": ""
+                }
+              }
+            }
+          },
+          "key": {
+            "condition": "unchanged",
+            "value": "value"
+          },
+          "ops": {
+            "condition": "added",
+            "value": "vops"
+          }
+        }
+      }
+    }
+  },
+  "group1": {
+    "condition": "nested",
+    "value": {
+      "baz": {
+        "condition": "changed",
+        "value": {
+          "new_value": "bars",
+          "old_value": "bas"
+        }
+      },
+      "foo": {
+        "condition": "unchanged",
+        "value": "bar"
+      },
+      "nest": {
+        "condition": "changed",
+        "value": {
+          "new_value": "str",
+          "old_value": {
+            "key": "value"
+          }
+        }
+      }
+    }
+  },
+  "group2": {
+    "condition": "deleted",
+    "value": {
+      "abc": 12345,
+      "deep": {
+        "id": 45
+      }
+    }
+  },
+  "group3": {
+    "condition": "added",
+    "value": {
+      "deep": {
+        "id": {
+          "number": 45
+        }
+      },
+      "fee": 100500
+    }
+  }
+}'''
