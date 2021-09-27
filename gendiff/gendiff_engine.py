@@ -39,7 +39,16 @@ def generate_diff(file_path1, file_path2, formatter_name='stylish'):
                 diff_diff[key] = {CONDITION: UNCHANGED, VALUE: first_dict[key]}
             else:
                 if isinstance(second_dict.get(key), dict):
-                    diff_diff[key] = {
+                    if not isinstance(first_dict.get(key), dict):
+                        diff_diff[key] = {
+                            CONDITION: CHANGED,
+                            VALUE: {
+                                OLD_VALUE: first_dict[key],
+                                NEW_VALUE: second_dict[key],
+                            },
+                        }
+                    else:
+                        diff_diff[key] = {
                         CONDITION: NESTED,
                         VALUE: gen_diff(
                             first_dict[key],
@@ -56,7 +65,7 @@ def generate_diff(file_path1, file_path2, formatter_name='stylish'):
                         },
                     }
         for key_s in second_dict:
-            if first_dict.get(key_s) is None:
+            if first_dict.get(key_s, 'not_key') == 'not_key':
                 diff_diff[key_s] = {CONDITION: ADDED, VALUE: second_dict[key_s]}
         return diff_diff
 
@@ -80,3 +89,7 @@ def _select_formatter(formatter_name):
         'json': formatter_json,
     }
     return formatters[formatter_name]
+
+
+print(generate_diff('/media/tragoedia/TEMP/python_1/hexlet/python-project-lvl2/tests/hexlet/file1.json',
+                         '/media/tragoedia/TEMP/python_1/hexlet/python-project-lvl2/tests/hexlet/file2.json'))

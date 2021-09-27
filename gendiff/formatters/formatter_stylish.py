@@ -23,7 +23,7 @@ def formatter_stylish(format_dict):
 
     def form(simple_dict, tab, string):
         for key in sorted(simple_dict.keys()):
-            if check(simple_dict[key]) and simple_dict[key].get(VALUE) is None:
+            if check(simple_dict[key]) and simple_dict[key].get(VALUE, 'not_key') == 'not_key':
                 string += '{0}{1}{2}: {{\n{3}{0}    }}\n'.format(
                     tab,
                     get_status(simple_dict[key].get(CONDITION)),
