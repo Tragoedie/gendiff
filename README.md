@@ -1,6 +1,7 @@
 <h1><u>Gendiff:</u></h1>
 
 <h3>Hexlet tests and linter status:</h3>
+
 [![Actions Status](https://github.com/Tragoedie/python-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/Tragoedie/python-project-lvl2/actions)
 [![check](https://github.com/Tragoedie/python-project-lvl2/actions/workflows/linter_test_check.yml/badge.svg)](https://github.com/Tragoedie/python-project-lvl2/actions/workflows/linter_test_check.yml)
 <a href="https://codeclimate.com/github/Tragoedie/python-project-lvl2/maintainability"><img src="https://api.codeclimate.com/v1/badges/84ac06e864db4dcae66f/maintainability" /></a>
@@ -11,6 +12,7 @@
 Gendiff (GENerator of DIFFerences) is a program that detects the difference between two data structures (JSON or YAML) and generates a new structure containing details of the differences in different formats.
 
 <h3>Supported formats:</h3> 
+
 ```bash
 - 'stylish' output (--format stylish).
 
@@ -21,16 +23,19 @@ Gendiff (GENerator of DIFFerences) is a program that detects the difference betw
 <h2>Installation:</h2>
 
 Use the package manager pip to install gendiff:
+
 ```bash
   pip install --user git+https://github.com/Tragoedie/python-project-lvl2.git
 ```
 
 <h3>Optional arguments:</h3>
+
 ```bash
   -f, --format [type]  Output format: 'plain', 'json' or (default: 'stylish')
   -h, --help           output usage information
 ```
 <h3>Positional arguments:</h3>
+
 ```bash
   first_file - path to the first file.
   second_file - path to the second file.
