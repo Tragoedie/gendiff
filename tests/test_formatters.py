@@ -41,4 +41,3 @@ def test_converted_plain():
 def test_path_value():
     assert path_value('common.', 'key') == 'common.key'
     assert path_value('common.', 'common.') == 'common.'
-
