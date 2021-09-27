@@ -78,7 +78,9 @@ def converted_plain(value):
         return 'null'
     elif isinstance(value, (dict, list)):
         return '[complex value]'
-    return "'{0}'".format(value)
+    elif isinstance(value, str):
+        return "'{0}'".format(value)
+    return value
 
 
 def path_value(path, key):
