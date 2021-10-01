@@ -21,7 +21,7 @@ jobs:
         run: |
           make lint
           make test
-        - uses: paambaati/codeclimate-action@v2.7.5
+      - uses: paambaati/codeclimate-action@v2.7.5
         env:
           CC_TEST_REPORTER_ID: 7231e107d9b0fc2982e86fbf76e692b15f72a18cc76c7ed6eacf5511512c0ccc
         with:
