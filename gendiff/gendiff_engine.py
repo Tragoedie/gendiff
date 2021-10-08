@@ -47,20 +47,11 @@ def _gen_diff(first_dict, second_dict, diff_diff):  # noqa: C901, WPS231, WPS210
     for key2 in union_keys:
         if first_dict.get(key2) == second_dict.get(key2):
             diff_diff[key2] = {CONDITION: UNCHANGED, VALUE: first_dict[key2]}
-        elif isinstance(second_dict.get(key2), dict):
-            if isinstance(first_dict.get(key2), dict):
-                diff_diff[key2] = {
-                    CONDITION: NESTED,
-                    VALUE: _gen_diff(first_dict[key2], second_dict[key2], {}),
-                }
-            else:
-                diff_diff[key2] = {
-                    CONDITION: CHANGED,
-                    VALUE: {
-                        OLD_VALUE: first_dict[key2],
-                        NEW_VALUE: second_dict[key2],
-                    },
-                }
+        elif isinstance(second_dict.get(key2), dict) and isinstance(first_dict.get(key2), dict):
+            diff_diff[key2] = {
+                CONDITION: NESTED,
+                VALUE: _gen_diff(first_dict[key2], second_dict[key2], {}),
+            }
         else:
             diff_diff[key2] = {
                 CONDITION: CHANGED,
