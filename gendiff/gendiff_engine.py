@@ -53,6 +53,14 @@ def _gen_diff(first_dict, second_dict, diff_diff):  # noqa: C901, WPS231, WPS210
                     CONDITION: NESTED,
                     VALUE: _gen_diff(first_dict[key2], second_dict[key2], {}),
                 }
+            else:
+                diff_diff[key2] = {
+                    CONDITION: CHANGED,
+                    VALUE: {
+                        OLD_VALUE: first_dict[key2],
+                        NEW_VALUE: second_dict[key2],
+                    },
+                }
         else:
             diff_diff[key2] = {
                 CONDITION: CHANGED,
