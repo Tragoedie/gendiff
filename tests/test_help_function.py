@@ -1,36 +1,27 @@
-from tests.fixtures.result_for_testing import NESTED_STRUCTURE, PLAIN_STRUCTURE
-from gendiff.formatters.formatter_stylish import formatter_stylish, get_status, converted, check
-from gendiff.formatters.formatter_plain import formatter_plain, converted_plain, path_value
-from tests.fixtures.dict_for_testing import DICTIONARY_FOR_TEST
+"""Test help function for gendiff."""
 from gendiff.constants import ADDED, DELETED, UNCHANGED
+from gendiff.formatters.formatter_plain import converted_plain, path_value
+from gendiff.formatters.formatter_stylish import check, converted, get_status
 
 
-def test_formatter_stylish():
-    assert formatter_stylish(DICTIONARY_FOR_TEST) == NESTED_STRUCTURE
-
-
-def test_stylish_get_status():
+def test_stylish_get_status():  # noqa: D103
     assert get_status(DELETED) == '  - '
     assert get_status(ADDED) == '  + '
     assert get_status(UNCHANGED) == '    '
 
 
-def test_converted():
+def test_converted():  # noqa: D103
     assert converted(False) == 'false'
     assert converted(True) == 'true'
     assert converted(None) == 'null'
 
 
-def test_check():
+def test_check():  # noqa: D103
     assert check({}) is True
     assert check([]) is False
 
 
-def test_generate_plain():
-    assert formatter_plain(DICTIONARY_FOR_TEST) == PLAIN_STRUCTURE
-
-
-def test_converted_plain():
+def test_converted_plain():  # noqa: D103
     assert converted_plain(False) == 'false'
     assert converted_plain(True) == 'true'
     assert converted_plain(None) == 'null'

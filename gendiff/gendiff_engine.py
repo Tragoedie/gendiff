@@ -1,12 +1,15 @@
 """This is the difference logic."""
-from gendiff.constants import (
+from gendiff.constants import (  # noqa:WPS235
     ADDED,
     CHANGED,
     CONDITION,
     DELETED,
+    JSON,
     NESTED,
     NEW_VALUE,
     OLD_VALUE,
+    PLAIN,
+    STYLISH,
     UNCHANGED,
     VALUE,
 )
@@ -16,7 +19,7 @@ from gendiff.formatters.formatter_stylish import formatter_stylish
 from gendiff.parser_file import parser_file
 
 
-def generate_diff(file_path1, file_path2, formatter_name='stylish'):
+def generate_diff(file_path1, file_path2, formatter_name=STYLISH):
     """Get difference two file.
 
     Args:
@@ -27,51 +30,40 @@ def generate_diff(file_path1, file_path2, formatter_name='stylish'):
     Returns:
          basestring: difference.
     """
-    first_file = parser_file(file_path1, file_path1[file_path1.rfind('.'):])
-    second_file = parser_file(file_path2, file_path2[file_path2.rfind('.'):])
+    first_file = parser_file(file_path1)
+    second_file = parser_file(file_path2)
     difference_diff = {}
-
-    def gen_diff(first_dict, second_dict, diff_diff):
-        for key in first_dict:
-            if key not in second_dict:
-                diff_diff[key] = {CONDITION: DELETED, VALUE: first_dict[key]}
-            elif first_dict.get(key) == second_dict.get(key):
-                diff_diff[key] = {CONDITION: UNCHANGED, VALUE: first_dict[key]}
-            else:
-                if isinstance(second_dict.get(key), dict):
-                    if isinstance(first_dict.get(key), dict):
-                        diff_diff[key] = {
-                            CONDITION: NESTED,
-                            VALUE: gen_diff(
-                                first_dict[key],
-                                second_dict[key],
-                                {},
-                            ),
-                        }
-                    else:
-                        diff_diff[key] = {
-                            CONDITION: CHANGED,
-                            VALUE: {
-                                OLD_VALUE: first_dict[key],
-                                NEW_VALUE: second_dict[key],
-                            },
-                        }
-                else:
-                    diff_diff[key] = {
-                        CONDITION: CHANGED,
-                        VALUE: {
-                            OLD_VALUE: first_dict[key],
-                            NEW_VALUE: second_dict[key],
-                        },
-                    }
-        for key_s in second_dict:
-            if first_dict.get(key_s, 'not_key') == 'not_key':
-                diff_diff[key_s] = {CONDITION: ADDED, VALUE: second_dict[key_s]}
-        return diff_diff
-
     return _select_formatter(formatter_name)(
-        gen_diff(first_file, second_file, difference_diff),
+        _gen_diff(first_file, second_file, difference_diff),
     )
+
+
+def _gen_diff(first_dict, second_dict, diff_diff):  # noqa: C901, WPS231, WPS210
+    union_keys = (first_dict.keys() & second_dict.keys())
+    deleted_keys = (first_dict.keys() - second_dict.keys())
+    added_keys = (second_dict.keys() - first_dict.keys())
+    for key in deleted_keys:
+        diff_diff[key] = {CONDITION: DELETED, VALUE: first_dict[key]}
+    for key2 in union_keys:
+        if first_dict.get(key2) == second_dict.get(key2):
+            diff_diff[key2] = {CONDITION: UNCHANGED, VALUE: first_dict[key2]}
+        elif isinstance(second_dict.get(key2), dict):
+            if isinstance(first_dict.get(key2), dict):
+                diff_diff[key2] = {
+                    CONDITION: NESTED,
+                    VALUE: _gen_diff(first_dict[key2], second_dict[key2], {}),
+                }
+        else:
+            diff_diff[key2] = {
+                CONDITION: CHANGED,
+                VALUE: {
+                    OLD_VALUE: first_dict[key2],
+                    NEW_VALUE: second_dict[key2],
+                },
+            }
+    for key3 in added_keys:
+        diff_diff[key3] = {CONDITION: ADDED, VALUE: second_dict[key3]}
+    return diff_diff
 
 
 def _select_formatter(formatter_name):
@@ -84,8 +76,8 @@ def _select_formatter(formatter_name):
         output format
     """
     formatters = {
-        'stylish': formatter_stylish,
-        'plain': formatter_plain,
-        'json': formatter_json,
+        STYLISH: formatter_stylish,
+        PLAIN: formatter_plain,
+        JSON: formatter_json,
     }
     return formatters[formatter_name]

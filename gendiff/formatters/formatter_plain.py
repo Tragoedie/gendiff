@@ -1,5 +1,5 @@
 """This is string formatter."""
-from gendiff.constants import (
+from gendiff.constants import (  # noqa: WPS235
     ADDED,
     CHANGED,
     CONDITION,
@@ -12,7 +12,7 @@ from gendiff.constants import (
 )
 
 
-def formatter_plain(format_dict):
+def formatter_plain(format_dict):  # noqa: WPS231, WPS221, C901
     """Convert format_dict to plain format.
 
     Parameters:
@@ -22,45 +22,44 @@ def formatter_plain(format_dict):
         result string.
     """
     result_string = ''
-
-    def for_plain(simple_dict, path_to_next_values, string):
-        for key in sorted(simple_dict.keys()):
-            path = path_value(path_to_next_values, key)
-            if simple_dict[key].get(CONDITION) == ADDED:
-                string += "Property '{0}' was added with value: {1}\n".format(
-                    path,
-                    converted_plain(simple_dict[key][VALUE]),
-                )
-            elif simple_dict[key].get(CONDITION) == DELETED:
-                string += "Property '{0}' was removed\n".format(path)
-            elif simple_dict[key].get(CONDITION) == CHANGED:
-                string += "Property '{0}' was updated. From {1} to {2}\n".format(
-                    path,
-                    converted_plain(simple_dict[key][VALUE][OLD_VALUE]),
-                    converted_plain(simple_dict[key][VALUE][NEW_VALUE]),
-                )
-            elif simple_dict[key].get(CONDITION) == UNCHANGED:
-                continue
-            else:
-                string += for_plain(simple_dict[key][VALUE], path + '.', '')
-        return string
-
     for key in sorted(format_dict.keys()):
         path_to_value = key
         if format_dict[key][CONDITION] == NESTED:
-            result_string += for_plain(
+            result_string += _for_plain(
                 format_dict[key][VALUE],
                 path_to_value + '.',
                 '',
             )
         else:
-            result_string += for_plain(
+            result_string += _for_plain(
                 {key: format_dict[key]},
                 path_to_value,
                 '',
             )
-
     return result_string[:len(result_string) - 1]
+
+
+def _for_plain(simple_dict, path_to_next, string):  # noqa: WPS231, WPS221, C901
+    for key in sorted(simple_dict.keys()):
+        path = path_value(path_to_next, key)
+        if simple_dict[key].get(CONDITION) == ADDED:
+            string += "Property '{0}' was added with value: {1}\n".format(
+                path,
+                converted_plain(simple_dict[key][VALUE]),
+            )
+        elif simple_dict[key].get(CONDITION) == DELETED:
+            string += "Property '{0}' was removed\n".format(path)
+        elif simple_dict[key].get(CONDITION) == CHANGED:
+            string += "Property '{0}' was updated. From {1} to {2}\n".format(
+                path,
+                converted_plain(simple_dict[key][VALUE][OLD_VALUE]),
+                converted_plain(simple_dict[key][VALUE][NEW_VALUE]),
+            )
+        elif simple_dict[key].get(CONDITION) == UNCHANGED:
+            continue
+        elif simple_dict[key].get(CONDITION) == NESTED:
+            string += _for_plain(simple_dict[key][VALUE], path + '.', '')
+    return string
 
 
 def converted_plain(value):

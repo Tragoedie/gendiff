@@ -8,3 +8,7 @@ CONDITION = 'condition'
 VALUE = 'value'
 NEW_VALUE = 'new_value'
 OLD_VALUE = 'old_value'
+# Formatters const
+STYLISH = 'stylish'
+PLAIN = 'plain'
+JSON = 'json'

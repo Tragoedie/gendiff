@@ -1,6 +1,7 @@
 """This is gendiff scripts."""
 import argparse
 
+from gendiff.constants import JSON, PLAIN, STYLISH
 from gendiff.gendiff_engine import generate_diff
 
 
@@ -12,13 +13,12 @@ def main():
     parser.add_argument(
         '-f',
         '--format',
-        help='set format of output',
-        dest='format',
-        action='store',
+        type=str,
+        choices=[JSON, PLAIN, STYLISH],
+        default=STYLISH,
+        help='set format of output. stylish is default format',
     )
     args = parser.parse_args()
-    if not args.format:
-        args.format = 'stylish'
     print(generate_diff(args.first_file, args.second_file, args.format))
 
 
