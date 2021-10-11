@@ -22,21 +22,7 @@ def formatter_plain(format_dict):  # noqa: WPS231, WPS221, C901
         result string.
     """
     result_string = ''
-    for key in sorted(format_dict.keys()):
-        path_to_value = key
-        if format_dict[key][CONDITION] == NESTED:
-            result_string += _for_plain(
-                format_dict[key][VALUE],
-                path_to_value + '.',
-                '',
-            )
-        else:
-            result_string += _for_plain(
-                {key: format_dict[key]},
-                path_to_value,
-                '',
-            )
-    return result_string[:len(result_string) - 1]
+    return _for_plain(format_dict, '', result_string)[:len(result_string) - 1]
 
 
 def _for_plain(simple_dict, path_to_next, string):  # noqa: WPS231, WPS221, C901

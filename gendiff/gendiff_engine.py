@@ -38,7 +38,7 @@ def generate_diff(file_path1, file_path2, formatter_name=STYLISH):
     )
 
 
-def _gen_diff(first_dict, second_dict, diff_diff):  # noqa: C901, WPS231, WPS210
+def _gen_diff(first_dict, second_dict, diff_diff):  # noqa: C901, WPS231, WPS210, WPS221, E501
     union_keys = (first_dict.keys() & second_dict.keys())
     deleted_keys = (first_dict.keys() - second_dict.keys())
     added_keys = (second_dict.keys() - first_dict.keys())
@@ -47,7 +47,7 @@ def _gen_diff(first_dict, second_dict, diff_diff):  # noqa: C901, WPS231, WPS210
     for key2 in union_keys:
         if first_dict.get(key2) == second_dict.get(key2):
             diff_diff[key2] = {CONDITION: UNCHANGED, VALUE: first_dict[key2]}
-        elif isinstance(second_dict.get(key2), dict) and isinstance(first_dict.get(key2), dict):
+        elif isinstance(second_dict.get(key2), dict) and isinstance(first_dict.get(key2), dict):  # noqa:E501, WPS221
             diff_diff[key2] = {
                 CONDITION: NESTED,
                 VALUE: _gen_diff(first_dict[key2], second_dict[key2], {}),
