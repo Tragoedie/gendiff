@@ -6,8 +6,6 @@ from gendiff.constants import (  # noqa:WPS235
     DELETED,
     JSON,
     NESTED,
-    NEW_VALUE,
-    OLD_VALUE,
     PLAIN,
     STYLISH,
     UNCHANGED,
@@ -56,8 +54,8 @@ def _gen_diff(first_dict, second_dict, diff_diff):  # noqa: C901, WPS231, WPS210
             diff_diff[key2] = {
                 CONDITION: CHANGED,
                 VALUE: {
-                    OLD_VALUE: first_dict[key2],
-                    NEW_VALUE: second_dict[key2],
+                    DELETED: first_dict[key2],
+                    ADDED: second_dict[key2],
                 },
             }
     for key3 in added_keys:

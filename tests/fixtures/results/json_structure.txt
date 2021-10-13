@@ -17,8 +17,8 @@
       "setting3": {
         "condition": "changed",
         "value": {
-          "new_value": null,
-          "old_value": true
+          "added": null,
+          "deleted": true
         }
       },
       "setting4": {
@@ -52,8 +52,8 @@
       "baz": {
         "condition": "changed",
         "value": {
-          "new_value": "bars",
-          "old_value": "bas"
+          "added": "bars",
+          "deleted": "bas"
         }
       },
       "foo": {
@@ -63,8 +63,8 @@
       "nest": {
         "condition": "changed",
         "value": {
-          "new_value": "str",
-          "old_value": {
+          "added": "str",
+          "deleted": {
             "key": "value"
           }
         }

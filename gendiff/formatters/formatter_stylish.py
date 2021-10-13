@@ -1,16 +1,16 @@
 """This is string formatter."""
 from gendiff.constants import (
     ADDED,
+    CHANGED,
     CONDITION,
     DELETED,
-    NEW_VALUE,
-    OLD_VALUE,
+    FORMAT_STRING,
     UNCHANGED,
     VALUE,
 )
 
 
-def formatter_stylish(format_dict):  # noqa: WPS231, WPS221, C901
+def formatter_stylish(format_dict):
     """Convert format_dict to string format.
 
     Parameters:
@@ -20,78 +20,53 @@ def formatter_stylish(format_dict):  # noqa: WPS231, WPS221, C901
         result string.
     """
     tabs = ''
-    result_string = '{{\n{0}}}'.format(_form(format_dict, tabs, ''))
+    result_string = '{{\n{0}}}'.format(_for_stylish(format_dict, tabs, ''))
     return result_string.strip()
 
 
-def _form(simple_dict, tab, string):  # noqa: WPS231, WPS221, C901
+def _for_stylish(simple_dict, tab, string):
     for key in sorted(simple_dict.keys()):
-        if check(simple_dict[key]) and VALUE not in simple_dict[key]:
-            string += '{0}{1}{2}: {{\n{3}{0}    }}\n'.format(
+        condition = UNCHANGED
+        if isinstance(simple_dict[key], dict):
+            condition = simple_dict[key].get(CONDITION)
+        if condition == CHANGED:
+            string += FORMAT_STRING.format(
                 tab,
-                get_status(simple_dict[key].get(CONDITION)),
+                get_status(DELETED),
                 key,
-                _form(simple_dict[key], tab + '    ', ''),
+                get_value(simple_dict[key][VALUE][DELETED], tab + '    '),
             )
-        elif check(simple_dict[key]) and check(simple_dict[key][VALUE]):
-            if 'old_value' in simple_dict[key][VALUE]:
-                if isinstance(simple_dict[key][VALUE][OLD_VALUE], dict):
-                    string += '{0}{1}{2}: {{\n{3}{0}    }}\n'.format(
-                        tab,
-                        get_status(DELETED),
-                        key,
-                        _form(
-                            simple_dict[key][VALUE][OLD_VALUE],
-                            tab + '    ',
-                            '',
-                        ),
-                    )
-                else:
-                    string += '{0}{1}{2}: {3}\n'.format(
-                        tab,
-                        get_status(DELETED),
-                        key,
-                        converted(simple_dict[key][VALUE][OLD_VALUE]),
-                    )
-                if isinstance(simple_dict[key][VALUE][NEW_VALUE], dict):
-                    string += '{0}{1}{2}: {{\n{3}{0}    }}\n'.format(
-                        tab,
-                        get_status(ADDED),
-                        key,
-                        _form(
-                            simple_dict[key][VALUE][NEW_VALUE],
-                            tab + '    ',
-                            '',
-                        ),
-                    )
-                else:
-                    string += '{0}{1}{2}: {3}\n'.format(
-                        tab,
-                        get_status(ADDED),
-                        key,
-                        converted(simple_dict[key][VALUE][NEW_VALUE]),
-                    )
-            else:
-                string += '{0}{1}{2}: {{\n{3}{0}    }}\n'.format(
-                    tab,
-                    get_status(simple_dict[key].get(CONDITION)),
-                    key,
-                    _form(simple_dict[key][VALUE], tab + '    ', ''),
-                )
-        else:
-            if isinstance(simple_dict[key], dict):
-                value = simple_dict[key][VALUE]
-                cond = simple_dict[key].get(CONDITION)
-            else:
-                value = simple_dict[key]
-                cond = UNCHANGED
-            string += '{0}{1}{2}: {3}\n'.format(
+            string += FORMAT_STRING.format(
                 tab,
-                get_status(cond),
+                get_status(ADDED),
                 key,
-                converted(value),
+                get_value(simple_dict[key][VALUE][ADDED], tab + '    '),
+            )
+        else:
+            string += FORMAT_STRING.format(
+                tab,
+                get_status(condition),
+                key,
+                get_value(simple_dict[key], tab + '    '),
             )
     return string
+
+
+def get_value(data_items, tab):
+    """Return value in string format.
+
+    Parameters:
+        data_items: value to execute.
+        tab: offset
+
+    Returns:
+        value string.
+    """
+    if isinstance(data_items, dict) and VALUE in data_items:
+        return get_value(data_items[VALUE], tab)
+    elif isinstance(data_items, dict):
+        return '{{\n{0}{1}}}'.format(_for_stylish(data_items, tab, ''), tab)
+    return converted(data_items)
 
 
 def get_status(value):
@@ -124,15 +99,3 @@ def converted(value):
     elif value is None:
         return 'null'
     return value
-
-
-def check(value):
-    """Check if dictionary.
-
-    Parameters:
-        value: checked value.
-
-    Returns:
-        boolean: is dictionary
-    """
-    return isinstance(value, dict)

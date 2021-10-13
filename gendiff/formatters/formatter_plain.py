@@ -5,8 +5,6 @@ from gendiff.constants import (  # noqa: WPS235
     CONDITION,
     DELETED,
     NESTED,
-    NEW_VALUE,
-    OLD_VALUE,
     UNCHANGED,
     VALUE,
 )
@@ -38,8 +36,8 @@ def _for_plain(simple_dict, path_to_next, string):  # noqa: WPS231, WPS221, C901
         elif simple_dict[key].get(CONDITION) == CHANGED:
             string += "Property '{0}' was updated. From {1} to {2}\n".format(
                 path,
-                converted_plain(simple_dict[key][VALUE][OLD_VALUE]),
-                converted_plain(simple_dict[key][VALUE][NEW_VALUE]),
+                converted_plain(simple_dict[key][VALUE][DELETED]),
+                converted_plain(simple_dict[key][VALUE][ADDED]),
             )
         elif simple_dict[key].get(CONDITION) == UNCHANGED:
             continue
@@ -58,13 +56,13 @@ def converted_plain(value):
         new values.
     """
     if isinstance(value, bool):
-        return (str(value)).lower()
+        value = (str(value)).lower()
     elif value is None:
-        return 'null'
+        value = 'null'
     elif isinstance(value, (dict, list)):
-        return '[complex value]'
+        value = '[complex value]'
     elif isinstance(value, str):
-        return "'{0}'".format(value)
+        value = "'{0}'".format(value)
     return value
 
 
