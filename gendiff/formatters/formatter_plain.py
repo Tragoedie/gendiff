@@ -10,51 +10,43 @@ from gendiff.constants import (  # noqa: WPS235
 )
 
 
-def formatter_plain(format_dict):  # noqa: WPS231, WPS221, C901
+def formatter_plain(diff_structure):  # noqa: WPS231, WPS221, C901
     """Convert format_dict to plain format.
 
     Parameters:
-        format_dict(dict): dict of difference.
+        diff_structure(dict): dict of difference.
 
     Returns:
         result string.
     """
-    result_string = ''
-    return _for_plain(format_dict, '', result_string)[:len(result_string) - 1]
+    result_string = []
+    return '\n'.join(_for_plain(diff_structure, '', result_string))
 
 
-def _for_plain(simple_dict, path_to_next, string):  # noqa: WPS231, WPS221, C901
-    for key in sorted(simple_dict.keys()):
-        path = path_value(path_to_next, key)
-        if simple_dict[key].get(CONDITION) == ADDED:
-            string += "Property '{0}' was added with value: {1}\n".format(
+def _for_plain(diff, path_prefix, string):  # noqa: WPS231, WPS221, C901
+    for key in sorted(diff.keys()):
+        path = get_path(path_prefix, key)
+        if diff[key].get(CONDITION) == ADDED:
+            string.append("Property '{0}' was added with value: {1}".format(
                 path,
-                converted_plain(simple_dict[key][VALUE]),
-            )
-        elif simple_dict[key].get(CONDITION) == DELETED:
-            string += "Property '{0}' was removed\n".format(path)
-        elif simple_dict[key].get(CONDITION) == CHANGED:
-            string += "Property '{0}' was updated. From {1} to {2}\n".format(
+                converting_plain(diff[key][VALUE]),
+            ))
+        elif diff[key].get(CONDITION) == DELETED:
+            string.append("Property '{0}' was removed".format(path))
+        elif diff[key].get(CONDITION) == CHANGED:
+            string.append("Property '{0}' was updated. From {1} to {2}".format(
                 path,
-                converted_plain(simple_dict[key][VALUE][DELETED]),
-                converted_plain(simple_dict[key][VALUE][ADDED]),
-            )
-        elif simple_dict[key].get(CONDITION) == UNCHANGED:
+                converting_plain(diff[key][VALUE][DELETED]),
+                converting_plain(diff[key][VALUE][ADDED]),
+            ))
+        elif diff[key].get(CONDITION) == UNCHANGED:
             continue
-        elif simple_dict[key].get(CONDITION) == NESTED:
-            string += _for_plain(simple_dict[key][VALUE], path + '.', '')
+        elif diff[key].get(CONDITION) == NESTED:
+            string += _for_plain(diff[key][VALUE], path + '.', [])
     return string
 
 
-def converted_plain(value):
-    """Editing values.
-
-    Parameters:
-        value: name of values.
-
-    Returns:
-        new values.
-    """
+def converting_plain(value):
     if isinstance(value, bool):
         value = (str(value)).lower()
     elif value is None:
@@ -66,16 +58,7 @@ def converted_plain(value):
     return value
 
 
-def path_value(path, key):
-    """Editing path for string.
-
-    Parameters:
-        path: path for key.
-        key: ending key.
-
-    Returns:
-        new path
-    """
+def get_path(path, key):
     if path == key:
         return path
     return path + key

@@ -4,80 +4,69 @@ from gendiff.constants import (
     CHANGED,
     CONDITION,
     DELETED,
-    FORMAT_STRING,
+    NESTED,
     UNCHANGED,
     VALUE,
 )
 
+FORMAT_STRING = '{0}{1}{2}: {3}\n'
+OFFSETS = '    '
 
-def formatter_stylish(format_dict):
+
+def formatter_stylish(diff_structure):
     """Convert format_dict to string format.
 
     Parameters:
-        format_dict(dict): dict of difference.
+        diff_structure(dict): dict of difference.
 
     Returns:
         result string.
     """
     tabs = ''
-    result_string = '{{\n{0}}}'.format(_for_stylish(format_dict, tabs, ''))
-    return result_string.strip()
+    return '{{\n{0}}}'.format(''.join(_for_stylish(diff_structure, tabs)))
 
 
-def _for_stylish(simple_dict, tab, string):
-    for key in sorted(simple_dict.keys()):
+def _for_stylish(diff, tab):
+    string = []
+    for key in sorted(diff.keys()):
         condition = UNCHANGED
-        if isinstance(simple_dict[key], dict):
-            condition = simple_dict[key].get(CONDITION)
+        if isinstance(diff[key], dict):
+            condition = diff[key].get(CONDITION)
         if condition == CHANGED:
-            string += FORMAT_STRING.format(
+            string.append(FORMAT_STRING.format(
                 tab,
-                get_status(DELETED),
+                get_key_prefix(DELETED),
                 key,
-                get_value(simple_dict[key][VALUE][DELETED], tab + '    '),
-            )
-            string += FORMAT_STRING.format(
+                format_value(diff[key][VALUE][DELETED], tab + OFFSETS),
+            ))
+            string.append(FORMAT_STRING.format(
                 tab,
-                get_status(ADDED),
+                get_key_prefix(ADDED),
                 key,
-                get_value(simple_dict[key][VALUE][ADDED], tab + '    '),
-            )
-        else:
-            string += FORMAT_STRING.format(
+                format_value(diff[key][VALUE][ADDED], tab + OFFSETS),
+            ))
+        elif condition in (ADDED, DELETED, NESTED, UNCHANGED, None):
+            string.append(FORMAT_STRING.format(
                 tab,
-                get_status(condition),
+                get_key_prefix(condition),
                 key,
-                get_value(simple_dict[key], tab + '    '),
-            )
+                format_value(diff[key], tab + OFFSETS),
+            ))
     return string
 
 
-def get_value(data_items, tab):
-    """Return value in string format.
-
-    Parameters:
-        data_items: value to execute.
-        tab: offset
-
-    Returns:
-        value string.
-    """
+def format_value(data_items, tab):
     if isinstance(data_items, dict) and VALUE in data_items:
-        return get_value(data_items[VALUE], tab)
+        return format_value(data_items[VALUE], tab)
     elif isinstance(data_items, dict):
-        return '{{\n{0}{1}}}'.format(_for_stylish(data_items, tab, ''), tab)
-    return converted(data_items)
+        return '{{\n{0}{1}}}'.format(
+            ''.join(_for_stylish(data_items, tab)),
+            tab,
+        )
+    return converting_stylish(data_items)
 
 
-def get_status(value):
-    """Convert name to value.
-
-    Parameters:
-        value: name of parameters.
-
-    Returns:
-        new value.
-    """
+def get_key_prefix(value):
     if value == DELETED:
         return '  - '
     elif value == ADDED:
@@ -85,15 +74,7 @@ def get_status(value):
     return '    '
 
 
-def converted(value):
-    """Editing values.
-
-    Parameters:
-        value: name of values.
-
-    Returns:
-        new values.
-    """
+def converting_stylish(value):
     if isinstance(value, bool):
         return (str(value)).lower()
     elif value is None:

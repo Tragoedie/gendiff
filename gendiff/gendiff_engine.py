@@ -14,7 +14,7 @@ from gendiff.constants import (  # noqa:WPS235
 from gendiff.formatters.formatter_json import formatter_json
 from gendiff.formatters.formatter_plain import formatter_plain
 from gendiff.formatters.formatter_stylish import formatter_stylish
-from gendiff.parser_file import parser_file
+from gendiff.parser_file import parse_file
 
 
 def generate_diff(file_path1, file_path2, formatter_name=STYLISH):
@@ -28,27 +28,27 @@ def generate_diff(file_path1, file_path2, formatter_name=STYLISH):
     Returns:
          basestring: difference.
     """
-    first_file = parser_file(file_path1)
-    second_file = parser_file(file_path2)
-    difference_diff = {}
+    content_one = parse_file(file_path1)
+    content_two = parse_file(file_path2)
     return _select_formatter(formatter_name)(
-        _gen_diff(first_file, second_file, difference_diff),
+        _gen_diff(content_one, content_two),
     )
 
 
-def _gen_diff(first_dict, second_dict, diff_diff):  # noqa: C901, WPS231, WPS210, WPS221, E501
-    union_keys = (first_dict.keys() & second_dict.keys())
+def _gen_diff(first_dict, second_dict):  # noqa: C901, WPS231, WPS210, WPS221, E501
+    diff_diff = {}
+    shared_keys = (first_dict.keys() & second_dict.keys())
     deleted_keys = (first_dict.keys() - second_dict.keys())
     added_keys = (second_dict.keys() - first_dict.keys())
     for key in deleted_keys:
         diff_diff[key] = {CONDITION: DELETED, VALUE: first_dict[key]}
-    for key2 in union_keys:
+    for key2 in shared_keys:
         if first_dict.get(key2) == second_dict.get(key2):
             diff_diff[key2] = {CONDITION: UNCHANGED, VALUE: first_dict[key2]}
         elif isinstance(second_dict.get(key2), dict) and isinstance(first_dict.get(key2), dict):  # noqa:E501, WPS221
             diff_diff[key2] = {
                 CONDITION: NESTED,
-                VALUE: _gen_diff(first_dict[key2], second_dict[key2], {}),
+                VALUE: _gen_diff(first_dict[key2], second_dict[key2]),
             }
         else:
             diff_diff[key2] = {

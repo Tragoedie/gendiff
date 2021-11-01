@@ -10,5 +10,3 @@ VALUE = 'value'
 STYLISH = 'stylish'
 PLAIN = 'plain'
 JSON = 'json'
-# String const
-FORMAT_STRING = '{0}{1}{2}: {3}\n'
